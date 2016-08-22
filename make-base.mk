@@ -1,4 +1,4 @@
-CC=gcc # Both the compiler and assembler need crosscompiled http://wiki.osdev.org/GCC_Cross-Compile
+CC=gcc
 AS=nasm
 
 COBJECTS=$(patsubst %, build/%.o, $(CSOURCES))
@@ -12,7 +12,7 @@ INCLUDE_FLAGS=-I include $(patsubst %, -I ../%/include, $(LIBS))
 LIBS_FLAGS=$(foreach L, $(LIBS), -L ../$L/build -l$L)
 
 CFLAGS=-c -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER -fno-exceptions -nostdlib -ffreestanding -fno-rtti -Wall -Wextra $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS)
-AFLAGS=-f elf
+AFLAGS=-f elf64
 
 all: $(OBJECTS)
 
