@@ -1,8 +1,8 @@
 ARLIBS=$(foreach L,$(LIBS),../$L/build/lib$L.a)
-ARFLAGS=-fpic -shared $(ARLIBS)
+ARFLAGS=$(ARLIBS)
 
 lib: build/lib$(NAME).a
 build/lib$(NAME).a: $(COBJECTS) $(AOBJECTS)
-	ld $(COBJECTS) $(AOBJECTS) $(ARFLAGS) -o build/lib$(NAME).a
+	ar -r build/lib$(NAME).a $(COBJECTS) $(AOBJECTS) $(ARFLAGS)
 
 all: lib
