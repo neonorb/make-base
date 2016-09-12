@@ -5,7 +5,7 @@ COBJECTS=$(patsubst %, build/%.o, $(CSOURCES))
 AOBJECTS=$(patsubst %, build/%.o, $(ASOURCES))
 OBJECTS=$(COBJECTS) $(AOBJECTS)
 
-CDFLAGS=$(if $(DEBUGGING), -g -Og, -O2)
+CDFLAGS=$(if $(DEBUGGING), -g -Og -D DEBUGGING, -O2)
 CTFLAGS=$(if $(TESTING),-D TESTING)
 
 INCLUDE_FLAGS=-I include $(patsubst %, -I ../%/include, $(LIBS))
