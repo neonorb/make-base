@@ -1,17 +1,17 @@
-CC=gcc
+CC=g++
 AS=nasm
 
 COBJECTS=$(patsubst %, build/%.o, $(CSOURCES))
 AOBJECTS=$(patsubst %, build/%.o, $(ASOURCES))
 OBJECTS=$(COBJECTS) $(AOBJECTS)
 
-CDFLAGS=$(if $(DEBUGGING), -g -Og -D DEBUGGING, -O2)
+CDFLAGS=$(if $(DEBUGGING), -g -O0 -D DEBUGGING, -O2)
 CTFLAGS=$(if $(TESTING),-D TESTING)
 
 INCLUDE_FLAGS=-I include $(patsubst %, -I ../%/include, $(LIBS))
 LIBS_FLAGS=$(foreach L, $(LIBS), -L ../$L/build -l$L)
 
-CFLAGS=-c -fno-stack-protector -fpic -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER -fno-exceptions -nostdlib -ffreestanding -fno-rtti -Wall -Wextra $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS)
+CFLAGS=-c -std=c++11 -fpic -Wall -Wextra -fno-stack-protector -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER -fno-exceptions -fno-rtti $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS)
 AFLAGS=-f elf64
 
 all: $(OBJECTS)
