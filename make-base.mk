@@ -1,5 +1,12 @@
-CC=g++
+ARCH="x86_64 g++ ar" "aarch64 "
+
+CC_x86=g++
+CC_AARCH64=aarch64-linux-gnu-g++
+CC=$(CC_x86)
 AS=nasm
+AR_x86=ar
+AR_AARCH64=aarch64-linux-gnu-ar
+AR=$(AR_x86)
 
 COBJECTS=$(patsubst %, build/%.o, $(CSOURCES))
 AOBJECTS=$(patsubst %, build/%.o, $(ASOURCES))
@@ -12,7 +19,8 @@ TFLAGS=$(if $(ALLOW_TEST),-D ALLOW_TEST)
 INCLUDE_FLAGS=-I include $(patsubst %, -I ../%/include, $(LIBS))
 LIBS_FLAGS=$(foreach L, $(LIBS), -L ../$L/build -l$L)
 
-CFLAGS=-c -std=c++14 -fpic -Wall -Wextra -Wno-comment -fno-stack-protector -fshort-wchar -mno-red-zone -DEFI_FUNCTION_WRAPPER $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS) $(TFLAGS)
+CFLAGS=-c -std=c++14 -fpic -Wall -Wextra -Wno-comment -fno-stack-protector -fshort-wchar -DEFI_FUNCTION_WRAPPER $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS) $(TFLAGS)
+# x86_64 -mno-red-zone 
 AFLAGS=-f elf64
 
 all: $(OBJECTS)
