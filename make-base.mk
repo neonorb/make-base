@@ -1,37 +1,44 @@
-ARCH="x86_64 g++ ar" "aarch64 "
+ARCHS=x86_64 armeabi
 
-CC_x86=g++
-CC_AARCH64=aarch64-linux-gnu-g++
-CC=$(CC_x86)
-AS=nasm
-AR_x86=ar
-AR_AARCH64=aarch64-linux-gnu-ar
-AR=$(AR_x86)
+CC-x86_64=g++
+CF-x86_64=-mno-red-zone -DBITS64 -fshort-wchar
+AA-x86_64=nasm
+RR-x86_64=ar
 
-COBJECTS=$(patsubst %, build/%.o, $(CSOURCES))
-AOBJECTS=$(patsubst %, build/%.o, $(ASOURCES))
-OBJECTS=$(COBJECTS) $(AOBJECTS)
+CC-armeabi=arm-linux-gnueabi-g++
+CF-armeabi=-DBITS32 -fPIC
+AA-armeabi=
+RR-armeabi=arm-linux-gnueabi-ar
+
+$(foreach A, $(ARCHS), $(eval COBJECTS-$A=$(patsubst %, build/$(A)/%.o, $(CSOURCES))))
+$(foreach A, $(ARCHS), $(eval AOBJECTS-$A=$(patsubst %, build/$(A)/%.o, $(ASOURCES))))
+$(foreach A, $(ARCHS), $(eval OBJECTS-$A=$(COBJECTS-$A) $(AOBJECTS-$A)))
+OBJECTS-all=$(foreach A, $(ARCHS), $(OBJECTS-$A))
 
 CDFLAGS=$(if $(DEBUGGING), -g -O0 -D DEBUGGING, -O2)
 CTFLAGS=$(if $(DO_TEST),-D DO_TEST -D ALLOW_TEST)
 TFLAGS=$(if $(ALLOW_TEST),-D ALLOW_TEST)
 
 INCLUDE_FLAGS=-I include $(patsubst %, -I ../%/include, $(LIBS))
-LIBS_FLAGS=$(foreach L, $(LIBS), -L ../$L/build -l$L)
+LIB_FLAGS=
 
-CFLAGS=-c -std=c++14 -fpic -Wall -Wextra -Wno-comment -fno-stack-protector -fshort-wchar -DEFI_FUNCTION_WRAPPER $(INCLUDE_FLAGS) $(LIBS_FLAGS) $(CDFLAGS) $(CTFLAGS) $(TFLAGS)
-# x86_64 -mno-red-zone 
+CFLAGS=-c -std=c++14 -Wall -Wextra -Wno-comment -fno-stack-protector -DEFI_FUNCTION_WRAPPER $(INCLUDE_FLAGS) $(CDFLAGS) $(CTFLAGS) $(TFLAGS)
 AFLAGS=-f elf64
 
-all: $(OBJECTS)
+all: $(OBJECTS-all)
 
 .SECONDEXPANSION:
+CURRENT_ARCH=$(word 2,$(subst /, ,$@))
+CURRENT_NAME=$(patsubst build/$(CURRENT_ARCH)/%.o,%,$@)
+$(OBJECTS-all):build/%.o: src/$$(CURRENT_NAME).cpp | $$(dir $$@)/.dirstamp
+	@$(CC-$(CURRENT_ARCH)) \
+	    -o $@ $^ \
+	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
 
-build/%.o: src/%.cpp | $$(dir $$@)/.dirstamp
-	@$(CC) -o $@ $^ $(CFLAGS)
-
-build/%.o: src/%.s | $$(dir $$@)/.dirstamp
-	@$(AS) $(AFLAGS) -o $@ $^
+build/%.o: src/$$(firstword $$(subst ., ,$$(lastword $$(subst -, , $$@)))).s | $$(dir $$@)/.dirstamp
+	@$(AA-$(CURRENT_ARCH)) \
+	    -o $@ $^ \
+	    $(AFLAGS)
 
 %/.dirstamp:
 	@mkdir -p $(@D)

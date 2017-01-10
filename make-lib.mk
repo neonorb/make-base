@@ -1,8 +1,11 @@
-ARLIBS=$(foreach L,$(LIBS),../$L/build/lib$L.a)
-ARFLAGS=$(ARLIBS)
+ARFLAGS=
 
-lib: build/lib$(NAME).a
-build/lib$(NAME).a: $(COBJECTS) $(AOBJECTS)
-	$(AR) -r build/lib$(NAME).a $(COBJECTS) $(AOBJECTS) $(ARFLAGS) 2> /tmp/makefilearoutput || (cat /tmp/makefilearoutput ; rm /tmp/makefilearoutput ; exit 1) && rm /tmp/makefilearoutput
+lib: $$(foreach A, $(ARCHS), build/$$A/lib$(NAME).a)
+build/%/lib$(NAME).a: $$(OBJECTS-$$(CURRENT_ARCH)) | $$(dir $$@)/.dirstamp
+	@$(RR-$(CURRENT_ARCH)) \
+	    -r $@ \
+	    $^ \
+	    $(ARFLAGS) \
+	    2> /tmp/makefilearoutput || (cat /tmp/makefilearoutput ; rm /tmp/makefilearoutput ; exit 1) && rm /tmp/makefilearoutput
 
 all: lib
