@@ -1,4 +1,4 @@
-ARCHS=x86_64 armeabi
+ARCHS?=x86_64 armeabi
 
 CC-x86_64=g++
 CF-x86_64=-mno-red-zone -DBITS64 -fshort-wchar
