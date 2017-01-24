@@ -38,7 +38,7 @@ $(CPPOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).cpp | $$(dir $$@)/.dirstamp
 	@$(CC-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
 	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
-	    
+
 $(COBJECTS-all):build/%.o: src/$$(CURRENT_NAME).c | $$(dir $$@)/.dirstamp
 	@$(CC-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
