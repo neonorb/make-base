@@ -1,5 +1,6 @@
 ARFLAGS=
 
+all: lib
 lib: $$(foreach A, $(ARCHS), build/$$A/lib$(NAME).a)
 build/%/lib$(NAME).a: $$(OBJECTS-$$(CURRENT_ARCH)) | $$(dir $$@)/.dirstamp
 	@$(RR-$(CURRENT_ARCH)) \
@@ -7,5 +8,3 @@ build/%/lib$(NAME).a: $$(OBJECTS-$$(CURRENT_ARCH)) | $$(dir $$@)/.dirstamp
 	    $^ \
 	    $(ARFLAGS) \
 	    2> /tmp/makefilearoutput || (cat /tmp/makefilearoutput ; rm /tmp/makefilearoutput ; exit 1) && rm /tmp/makefilearoutput
-
-all: lib
