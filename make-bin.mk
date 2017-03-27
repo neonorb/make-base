@@ -18,4 +18,4 @@ all: bin
 	
 .PHONY:
 install: build/x86_64/$(NAME).bin
-	@cp build/x86_64/$(NAME) $(INSTALL_DIR)/$(NAME)
+	@cp build/x86_64/$(NAME).bin $(INSTALL_DIR)/$(NAME)
