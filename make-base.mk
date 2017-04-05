@@ -11,6 +11,8 @@ CF-armeabi=-DBITS32 -fPIC
 AA-armeabi=
 RR-armeabi=arm-linux-gnueabi-ar
 
+NO_PRINT_COMMAND=$(if $(PRINT_COMMANDS),,@)
+
 $(foreach A, $(ARCHS), $(eval CPPOBJECTS-$A=$(patsubst %, build/$(A)/%.o, $(CPPSOURCES))))
 $(foreach A, $(ARCHS), $(eval COBJECTS-$A=$(patsubst %, build/$(A)/%.o, $(CSOURCES))))
 $(foreach A, $(ARCHS), $(eval AOBJECTS-$A=$(patsubst %, build/$(A)/%.o, $(ASOURCES))))
@@ -35,17 +37,17 @@ all: $(OBJECTS-all)
 CURRENT_ARCH=$(word 2,$(subst /, ,$@))
 CURRENT_NAME=$(patsubst build/$(CURRENT_ARCH)/%.o,%,$@)
 $(CPPOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).cpp | $$(dir $$@)/.dirstamp
-	@$(CC-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(CC-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
 	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
 
 $(COBJECTS-all):build/%.o: src/$$(CURRENT_NAME).c | $$(dir $$@)/.dirstamp
-	@$(CC-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(CC-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
 	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
 
 $(AOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).s | $$(dir $$@)/.dirstamp
-	@$(AA-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(AA-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
 	    $(AF-$(CURRENT_ARCH))
 
@@ -55,6 +57,6 @@ $(AOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).s | $$(dir $$@)/.dirstamp
 
 .PHONY:
 clean:
-	@rm -rf build
+	$(NO_PRINT_COMMAND)rm -rf build
 
 -include ../make-base/make-git.mk
