@@ -1,3 +1,5 @@
+# this generates an executable
+
 INSTALL_DIR=/usr/local/bin/
 
 bin: $$(foreach A, $(ARCHS), build/$$A/$(NAME).bin)

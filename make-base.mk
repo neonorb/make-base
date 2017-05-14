@@ -1,4 +1,14 @@
+# common build scripts to be used by all projects
+
+# all the architecutes to build for
 ARCHS?=x86_64 armeabi
+
+# for every architecture listed above, you need one of these:
+# CC-<arch>=<cpp compiler>
+# CF-<arch>=<cpp flags>
+# AA-<arch>=<assembler>
+# AF-<arch>=<assembler flags>
+# RR-<arch>=<archiver>
 
 CC-x86_64=g++
 CF-x86_64=-mno-red-zone -DBITS64 -fshort-wchar

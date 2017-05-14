@@ -1,3 +1,5 @@
+# this contains common git functionality
+
 .PHONY:
 merge-pullrequest:
 	ifndef MERGE_USER

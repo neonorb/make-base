@@ -1,3 +1,5 @@
+# this generates a static library
+
 ARFLAGS=
 
 all: lib
