@@ -6,7 +6,7 @@ all: lib
 lib: $$(foreach A, $(ARCHS), build/$$A/lib$(NAME).a)
 TMP_AR_OUT=/tmp/asiago_$(NAME)_ar_output.tmp
 build/%/lib$(NAME).a: $$(OBJECTS-$$(CURRENT_ARCH)) | $$(dir $$@)/.dirstamp
-	$(NO_PRINT_COMMAND)$(RR-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(RR_$(CURRENT_ARCH)) \
 	    -r $@ \
 	    $^ \
 	    $(ARFLAGS) \

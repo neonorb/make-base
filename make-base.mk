@@ -4,22 +4,22 @@
 ARCHS?=x86_64 armeabi
 
 # for every architecture listed above, you need one of these:
-# CC-<arch>=<cpp compiler>
-# CF-<arch>=<cpp flags>
-# AA-<arch>=<assembler>
-# AF-<arch>=<assembler flags>
-# RR-<arch>=<archiver>
+# CC_<arch>=<cpp compiler>
+# CF_<arch>=<cpp flags>
+# AA_<arch>=<assembler>
+# AF_<arch>=<assembler flags>
+# RR_<arch>=<archiver>
 
-CC-x86_64=g++
-CF-x86_64=-mno-red-zone -DBITS64 -fshort-wchar
-AA-x86_64=as
-AF-x86_64=--64
-RR-x86_64=ar
+CC_x86_64=g++
+CF_x86_64=-mno-red-zone -DBITS64 -fshort-wchar
+AA_x86_64=as
+AF_x86_64=--64
+RR_x86_64=ar
 
-CC-armeabi=arm-linux-gnueabi-g++
-CF-armeabi=-DBITS32 -fPIC
-AA-armeabi=
-RR-armeabi=arm-linux-gnueabi-ar
+CC_armeabi=arm-linux-gnueabi-g++
+CF_armeabi=-DBITS32 -fPIC
+AA_armeabi=
+RR_armeabi=arm-linux-gnueabi-ar
 
 NO_PRINT_COMMAND=$(if $(PRINT_COMMANDS),,@)
 
@@ -47,19 +47,19 @@ all: $(OBJECTS-all)
 CURRENT_ARCH=$(word 2,$(subst /, ,$@))
 CURRENT_NAME=$(patsubst build/$(CURRENT_ARCH)/%.o,%,$@)
 $(CPPOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).cpp | $$(dir $$@)/.dirstamp
-	$(NO_PRINT_COMMAND)$(CC-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(CC_$(CURRENT_ARCH)) \
 	    -o $@ $^ \
-	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
+	    $(CFLAGS) $(CF_$(CURRENT_ARCH))
 
 $(COBJECTS-all):build/%.o: src/$$(CURRENT_NAME).c | $$(dir $$@)/.dirstamp
 	$(NO_PRINT_COMMAND)$(CC-$(CURRENT_ARCH)) \
 	    -o $@ $^ \
-	    $(CFLAGS) $(CF-$(CURRENT_ARCH))
+	    $(CFLAGS) $(CF_$(CURRENT_ARCH))
 
 $(AOBJECTS-all):build/%.o: src/$$(CURRENT_NAME).s | $$(dir $$@)/.dirstamp
-	$(NO_PRINT_COMMAND)$(AA-$(CURRENT_ARCH)) \
+	$(NO_PRINT_COMMAND)$(AA_$(CURRENT_ARCH)) \
 	    -o $@ $^ \
-	    $(AF-$(CURRENT_ARCH))
+	    $(AF_$(CURRENT_ARCH))
 
 %/.dirstamp:
 	@mkdir -p $(@D)
