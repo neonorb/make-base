@@ -10,16 +10,16 @@ ARCHS?=x86_64 armeabi
 # AF_<arch>=<assembler flags>
 # RR_<arch>=<archiver>
 
-CC_x86_64=g++
-CF_x86_64=-mno-red-zone -DBITS64 -fshort-wchar
-AA_x86_64=as
-AF_x86_64=--64
-RR_x86_64=ar
+CC_x86_64?=g++
+CF_x86_64?=-mno-red-zone -DBITS64 -fshort-wchar
+AA_x86_64?=as
+AF_x86_64?=--64
+RR_x86_64?=ar
 
-CC_armeabi=arm-linux-gnueabi-g++
-CF_armeabi=-DBITS32 -fPIC
-AA_armeabi=
-RR_armeabi=arm-linux-gnueabi-ar
+CC_armeabi?=arm-linux-gnueabi-g++
+CF_armeabi?=-DBITS32 -fPIC
+AA_armeabi?=
+RR_armeabi?=arm-linux-gnueabi-ar
 
 NO_PRINT_COMMAND=$(if $(PRINT_COMMANDS),,@)
 
